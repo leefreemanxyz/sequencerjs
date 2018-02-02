@@ -25,14 +25,14 @@ export default class ControlMatrix extends PureComponent {
         Object.keys(synths).forEach((trackUuid,index)=>{
             console.log(trackUuid)
             console.log(synths[trackUuid])
-            synths[trackUuid].triggerAttackRelease(`${notes[index]}3`, "16n", time)
+            synths[trackUuid].triggerAttackRelease(`${notes[index % 12]}3`, "16n", time)
         })
     }, "4n")
     loop.start()
 
   }
   componentWillMount() {
-      Tone.Transport.start()
+      Tone.Transport.start('+0.1')
   }
   addTrack = () => {
     let trackUuid = uuid()
