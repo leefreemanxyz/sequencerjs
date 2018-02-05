@@ -3,7 +3,15 @@ import uuid from "uuid/v4"
 import SequencerTrack from "./SequencerTrack"
 import PlaybackControls from "./PlaybackControls"
 import * as Tone from "tone"
+import kitData from './kit.json'
+
+const samples = kitData.data
 const synths = {}
+
+const sample = [
+    {name:"Kick", url:"../808_drum_kit/kicks/808-Kicks01.wav"},
+    {name:"Snare", url:"../808_drum_kit/snares/808-Clap01.wav"},    
+]
 
 export default class ControlMatrix extends PureComponent {
   constructor(props) {
@@ -13,43 +21,49 @@ export default class ControlMatrix extends PureComponent {
       tracks: {},
       bpm: 120,
       playing: false,
-      sequencePoint: 0
+      sequencePoint: 0,
+      nextTrack: ""
     }
     const notes = [
-        "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"
+        "C", "C#", 
+        "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"
       ]
-    // create loop
-    // iterate over all synths in array
-    // trigger note if true
+    
     const loop = new Tone.Loop((time)=>{
         Object.keys(synths).forEach((trackUuid,index)=>{
-            console.log(trackUuid)
-            console.log(synths[trackUuid])
-            synths[trackUuid].triggerAttackRelease(`${notes[index % 12]}3`, "16n", time)
+            if(this.state.tracks[trackUuid] && this.state.tracks[trackUuid].sequence[(this.state.sequencePoint % 16)]){
+            synths[trackUuid].start()
+        }
         })
-    }, "4n")
+        Tone.Draw.schedule(()=>{
+            this.setState({sequencePoint: this.state.sequencePoint + 1})
+          })
+    }, "16n")
     loop.start()
 
-  }
-  componentWillMount() {
-      Tone.Transport.start('+0.1')
   }
   addTrack = () => {
     let trackUuid = uuid()
     this.setState((prevState) => ({
       tracks: {
         ...prevState.tracks,
-        [trackUuid]: { sequence: Array(16).fill(0) }
+        [trackUuid]: { sequence: Array(16).fill(0), uuid: trackUuid, name: samples[this.state.nextTrack].name }
       }
     }))
-    synths[trackUuid] = new Tone.Synth().toMaster()
-    synths[trackUuid].triggerAttackRelease("D3", "16n")
+    synths[trackUuid] = new Tone.Player({url: samples[this.state.nextTrack].url, retrigger: true}).toMaster()
   }
   removeTrack = (e) => {
     const { [e.target.id]: _, ...newState } = this.state.tracks
+    console.log(newState)
     this.setState({
       tracks: newState
     })
+  }
+  changeTempo = (e) => {
+    this.setState({
+      bpm: e.target.value
+    })
+    Tone.Transport.bpm.rampTo(e.target.value, 4);
   }
   toggleNote = (e) => {
     let uuid = e.target.attributes.uuid.value
@@ -64,7 +78,8 @@ export default class ControlMatrix extends PureComponent {
             newVal,
             ...prevState.tracks[uuid].sequence.slice(Number(index) + 1)
           ],
-          uuid: uuid
+          uuid: uuid,
+          name: prevState.tracks[uuid].name
         }
       }
     }))
@@ -73,16 +88,25 @@ export default class ControlMatrix extends PureComponent {
     this.setState({
       playing: true
     })
+    Tone.Transport.start('+0.1')
+
   }
   stopPlayback = () => {
     this.setState({
       playing: false
     })
+    Tone.Transport.stop()
   }
   setTempo = (e) => {
     this.setState({
       bpm: e.target.value
     })
+    Tone.Transport.bpm.rampTo(e.target.value, 4)
+  }
+  setChosenSample = (e) => {
+      this.setState({
+          nextTrack: e.target.value
+      })
   }
   render() {
     return (
@@ -98,8 +122,15 @@ export default class ControlMatrix extends PureComponent {
             />
           )
         })}
+        <select onChange={this.setChosenSample}>
+            <option value=""></option>
+            {samples.map((sample, index)=>{
+                return <option key={index} value={index}>{sample.name}</option>
+            })}
+        </select>
         <button onClick={this.addTrack}>+</button>
         <PlaybackControls
+            bpm={this.state.bpm}
           startPlayback={this.startPlayback}
           stopPlayback={this.stopPlayback}
           setTempo={this.setTempo}

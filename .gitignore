@@ -1,5 +1,8 @@
 # See https://help.github.com/ignore-files/ for more about ignoring files.
 
+# wavs
+/public/808_drum_kit
+
 # dependencies
 /node_modules
 

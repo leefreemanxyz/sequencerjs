@@ -1,0 +1,28 @@
+{
+    "data": [
+        {"name":"1-weird-808", "url":"../808_drum_kit/classic-808/1-weird-808.wav"},
+        {"name":"8-bit-drop", "url":"../808_drum_kit/classic-808/8-bit-drop.wav"},
+        {"name":"8-bit-with-sub", "url":"../808_drum_kit/classic-808/8-bit-with-sub.wav"},
+        {"name":"808-long-kick", "url":"../808_drum_kit/classic-808/808-long-kick.wav"},
+        {"name":"bass-drop", "url":"../808_drum_kit/classic-808/bass-drop.wav"},
+        {"name":"big-2", "url":"../808_drum_kit/classic-808/big-2.wav"},
+        {"name":"biiiig-808", "url":"../808_drum_kit/classic-808/biiiig-808.wav"},
+        {"name":"fly-08", "url":"../808_drum_kit/classic-808/fly-08.wav"},
+        {"name":"hba-1-08-bass01", "url":"../808_drum_kit/classic-808/hba-1-08-bass01.wav"},
+        {"name":"hba-1-08-bass02", "url":"../808_drum_kit/classic-808/hba-1-08-bass02.wav"},
+        {"name":"hba-1-11-bass-01", "url":"../808_drum_kit/classic-808/hba-1-11-bass-01.wav"},
+        {"name":"hba-1-18-bass-hit", "url":"../808_drum_kit/classic-808/hba-1-18-bass-hit.wav"},
+        {"name":"long-dist-808-D#-1", "url":"../808_drum_kit/classic-808/long-dist-808-D#-1.wav"},
+        {"name":"long-dist-808-D#", "url":"../808_drum_kit/classic-808/long-dist-808-D#.wav"},
+        {"name":"long-kick", "url":"../808_drum_kit/classic-808/long-kick.wav"},
+        {"name":"marie-808", "url":"../808_drum_kit/classic-808/marie-808.wav"},
+        {"name":"matic-808", "url":"../808_drum_kit/classic-808/matic-808.wav"},
+        {"name":"melo'ed-808", "url":"../808_drum_kit/classic-808/melo'ed-808.wav"},
+        {"name":"pedal-bass-hit", "url":"../808_drum_kit/classic-808/pedal-bass-hit.wav"},
+        {"name":"ramen-pedal", "url":"../808_drum_kit/classic-808/ramen-pedal.wav"},
+        {"name":"ramen", "url":"../808_drum_kit/classic-808/ramen.wav"},
+        {"name":"sci-fi-hit", "url":"../808_drum_kit/classic-808/sci-fi-hit.wav"},
+        {"name":"warm-808", "url":"../808_drum_kit/classic-808/warm-808.wav"}
+
+    ]
+}
