@@ -108,6 +108,9 @@ export default class ControlMatrix extends PureComponent {
           nextTrack: e.target.value
       })
   }
+  handleFileUpload = (e) => {
+      console.log(e.target.files)
+  }
   render() {
     return (
       <div>
@@ -128,6 +131,7 @@ export default class ControlMatrix extends PureComponent {
                 return <option key={index} value={index}>{sample.name}</option>
             })}
         </select>
+        {/* <input type="file" onChange={this.handleFileUpload}/> */}
         <button onClick={this.addTrack}>+</button>
         <PlaybackControls
             bpm={this.state.bpm}
