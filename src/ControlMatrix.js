@@ -5,8 +5,9 @@ import PlaybackControls from "./PlaybackControls"
 import * as Tone from "tone"
 import kitData from './kit.json'
 
-const samples = kitData.data
+let samples = kitData.data
 const synths = {}
+const volumes = {}
 
 const sample = [
     {name:"Kick", url:"../808_drum_kit/kicks/808-Kicks01.wav"},
@@ -50,7 +51,9 @@ export default class ControlMatrix extends PureComponent {
         [trackUuid]: { sequence: Array(16).fill(0), uuid: trackUuid, name: samples[this.state.nextTrack].name }
       }
     }))
+    volumes[trackUuid] = new Tone.Volume(0)
     synths[trackUuid] = new Tone.Player({url: samples[this.state.nextTrack].url, retrigger: true}).toMaster()
+    synths[trackUuid].chain(volumes[trackUuid], Tone.Master)
   }
   removeTrack = (e) => {
     const { [e.target.id]: _, ...newState } = this.state.tracks
@@ -103,38 +106,51 @@ export default class ControlMatrix extends PureComponent {
     })
     Tone.Transport.bpm.rampTo(e.target.value, 4)
   }
+  changeTrackVolume = (e) => {
+      console.log(volumes[e.target.attributes.uuid.value])
+      volumes[e.target.attributes.uuid.value].volume.rampTo(e.target.value, 0.05)
+  }
   setChosenSample = (e) => {
       this.setState({
           nextTrack: e.target.value
       })
   }
   handleFileUpload = (e) => {
-      console.log(e.target.files)
+      samples = [].concat(samples, {url: URL.createObjectURL(e.target.files[0]), name: e.target.files[0].name})
+      
+      this.forceUpdate()
   }
   render() {
     return (
       <div>
-        {Object.values(this.state.tracks).map((t, index) => {
-          let uuid = Object.keys(this.state.tracks)[index]
-          return (
-            <SequencerTrack
-              key={uuid}
-              removeTrack={this.removeTrack}
-              toggleNote={this.toggleNote}
-              track={{ ...t, uuid }}
-            />
-          )
-        })}
+          <table>
+              <tbody>
+{Object.values(this.state.tracks).map((t, index) => {
+    let uuid = Object.keys(this.state.tracks)[index]
+    return (
+      <SequencerTrack
+        key={uuid}
+        removeTrack={this.removeTrack}
+        toggleNote={this.toggleNote}
+        changeTrackVolume={this.changeTrackVolume}
+        track={{ ...t, uuid }}
+      />
+    )
+  })}
+              </tbody>
+          </table>
+        
         <select onChange={this.setChosenSample}>
             <option value=""></option>
             {samples.map((sample, index)=>{
                 return <option key={index} value={index}>{sample.name}</option>
             })}
         </select>
-        {/* <input type="file" onChange={this.handleFileUpload}/> */}
         <button onClick={this.addTrack}>+</button>
+
+        <input type="file" onChange={this.handleFileUpload}/>
         <PlaybackControls
-            bpm={this.state.bpm}
+          bpm={this.state.bpm}
           startPlayback={this.startPlayback}
           stopPlayback={this.stopPlayback}
           setTempo={this.setTempo}

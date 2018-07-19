@@ -4,16 +4,16 @@ export default class SequencerTrack extends PureComponent {
   render() {
     const { track } = this.props
     return (
-      <div style={{display:"flex", flexDirection:"row", justifyContent:"space-between"}}>
-        <div style={{}}>
+      <tr>
+        <td>
           <span>{track.name}</span>
           <button id={track.uuid} onClick={this.props.removeTrack}>
             x
           </button>
-        </div>
+        </td>
         {track.sequence.map((sequencePoint, index) => {
           return (
-            <span
+            <td
               val={sequencePoint}
               key={index}
               uuid={track.uuid}
@@ -21,10 +21,13 @@ export default class SequencerTrack extends PureComponent {
               onClick={this.props.toggleNote}
             >
               {sequencePoint}
-            </span>
+            </td>
           )
         })}
-      </div>
+        <td>
+            <input uuid={track.uuid} type="range" max="0" min="-1000000480" onChange={this.props.changeTrackVolume}/>
+        </td>
+      </tr>
     )
   }
 }
